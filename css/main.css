@@ -1,4 +1,3 @@
-
 /*smooth scrolling for the entire app */
 html {
     scroll-behavior: smooth;
@@ -17,6 +16,7 @@ html {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
 }
+
 body {
 
     display: flex;
@@ -241,7 +241,7 @@ button:active {
     border-radius: 5px;
     display: none;
     text-align: center;
-     width: fit-content; 
+    width: fit-content;
 }
 
 .input-error-message {
@@ -375,6 +375,7 @@ button:active {
     margin: 1.5rem;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
 }
 
 
@@ -459,6 +460,11 @@ button:active {
         width: 60%;
     }
 
+    .filterSort {
+        display: flex;
+        flex-direction: column;
+    }
+
 
 }
 
@@ -520,7 +526,7 @@ button:active {
     color: #ff4444 !important;
 }
 
-.alert-box.budget-alert .ok{
+.alert-box.budget-alert .ok {
     background-color: #ff4444 !important;
     color: #f8edeb !important;
     border: none !important;
@@ -562,6 +568,7 @@ button:active {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -890,8 +897,9 @@ button:active {
     border: 2px solid #fff;
 
 }
-.success-settings{
-        display: flex;
+
+.success-settings {
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
@@ -1325,4 +1333,19 @@ button:active {
         width: 100%;
         max-width: 300px;
     }
+}
+
+
+#export-table-csv {
+    background-color: white;
+    color: #00b4d8;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    padding: 2px 10px !important;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
