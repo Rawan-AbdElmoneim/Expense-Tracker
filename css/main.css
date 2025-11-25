@@ -768,6 +768,7 @@ button:active {
     .filter-sidenav {
         width: 100%;
         right: -100%;
+        z-index: 1100 !important;
     }
 
     .filter-sidenav.active {
