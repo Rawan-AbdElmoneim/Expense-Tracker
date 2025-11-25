@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Kalam:wght@300;400;700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pacifico&family=Righteous&family=Tuffy:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/main.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+</head>
+
+<body class="dark-bckgrnd">
+
+    <div class="header">
+        <div class="left-header">
+            <button class="menu-btn" id="menu-btn" aria-label="Toggle menu">
+                <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024">
+                    <path fill="#ffffff"
+                        d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2s18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z" />
+                </svg>
+            </button>
+
+            <div class="logo">
+                <h4 class="white-txt">Expense Tracker</h4>
+            </div>
+        </div>
+
+        <button class="btn logout text-end" id="logout">Logout</button>
+    </div>
+
+    <nav class="sidebar p-3" id="sidebar">
+        <button id="close-sidebar" aria-label="Close menu">
+            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024">
+                <path fill="#ffffff"
+                    d="m462 512l286 401q21 28 21 47q0 27-19 45.5t-45 18.5q-7 0-13.5-1t-11.5-3.5t-8.5-4.5t-8-6t-5.5-5.5t-5-6.5l-4-5l-265-370l-264 370l-4 5l-5 6.5l-5.5 5.5l-8 6l-9 4.5L77 1023l-13 1q-26 0-45-18.5T0 960q0-19 21-47l286-401L16 105q-1-1-4-5.5T7.5 93T4 86.5t-2.5-10T1 64q0-26 18.5-45T65 0q38 0 56 34l263 369L648 34q18-34 56-34q27 0 45.5 19T768 64q0 7-.5 12.5t-2.5 10t-3.5 6.5t-4.5 6.5t-4 5.5z" />
+            </svg>
+        </button>
+        <ul class="nav flex-column">
+
+            <li class="nav-item">
+                <button class="nav-link active-btn" onclick="showSection('transaction-log', event)">
+                    <svg class="sidenavIcons" width="25" height="25" fill="#ccc" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48">
+                        <path fill-rule="evenodd"
+                            d="M41.35 21.506c-1.995-.9-7.334-2.534-16.85-.074c-8.126 2.101-13.747 1.544-17.187.583c-.485-.135-.925-.07-1.187.06a.6.6 0 0 0-.219.17a.43.43 0 0 0-.075.225c-.179 1.799-.333 4.506-.333 8.486c0 5.898.338 8.993.592 10.477c.064.376.268.618.545.74c1.998.882 7.343 2.476 16.863.015c8.079-2.09 13.685-1.526 17.134-.55c.49.138.946.074 1.223-.064a.6.6 0 0 0 .236-.182a.45.45 0 0 0 .079-.233c.177-1.803.329-4.493.329-8.416c0-5.874-.34-8.978-.594-10.471c-.067-.39-.277-.64-.556-.766m1.645-3.646c1.571.71 2.579 2.126 2.854 3.74c.305 1.79.65 5.135.65 11.143c0 4.02-.154 6.846-.347 8.808c-.17 1.721-1.217 2.962-2.52 3.608c-1.253.62-2.74.708-4.087.328c-2.712-.767-7.594-1.353-15.045.573c-10.34 2.674-16.61 1.04-19.48-.228c-1.574-.695-2.595-2.105-2.872-3.726c-.305-1.783-.649-5.12-.649-11.15c0-4.078.158-6.921.353-8.882c.17-1.703 1.199-2.935 2.492-3.579c1.241-.618 2.712-.704 4.044-.332c2.706.755 7.608 1.336 15.111-.604c10.35-2.676 16.627-.994 19.496.3M26 24.63v-.058a2 2 0 0 0-4 0v.13a6.1 6.1 0 0 0-1.65.828c-1.026.733-1.968 1.953-1.968 3.567c0 .811.194 1.578.617 2.251c.415.662.974 1.113 1.52 1.425c.955.546 2.128.797 2.94.97l.121.026c.997.214 1.56.355 1.914.557a.7.7 0 0 1 .114.077a.6.6 0 0 1 .01.12c-.008.03-.055.15-.294.32a2.37 2.37 0 0 1-1.324.404a4.3 4.3 0 0 1-2.376-.733l-.007-.005a2 2 0 0 0-2.489 3.132l1.254-1.559a283 283 0 0 0-1.253 1.56h.001l.003.002l.005.005l.013.01l.031.024l.09.067q.11.08.287.196c.237.152.568.345.982.536c.403.185.894.372 1.459.515v.062a2 2 0 0 0 4 0v-.134a6.1 6.1 0 0 0 1.65-.828c1.026-.733 1.968-1.954 1.968-3.567c0-.811-.194-1.578-.617-2.251c-.415-.662-.975-1.113-1.52-1.425c-.956-.547-2.129-.797-2.94-.97l-.122-.026c-.996-.214-1.56-.355-1.913-.557a.7.7 0 0 1-.114-.077a.6.6 0 0 1-.01-.12c.007-.03.054-.15.294-.32a2.36 2.36 0 0 1 1.41-.403a4.3 4.3 0 0 1 2.29.731l.007.006a2 2 0 0 0 2.489-3.132l-1.254 1.559a197 197 0 0 0 1.252-1.56l-.003-.003l-.006-.004l-.012-.01l-.032-.024l-.09-.067a6 6 0 0 0-.287-.196a8 8 0 0 0-.982-.536A8.5 8.5 0 0 0 26 24.631m-.395 9.76l-.002-.004v-.002l-.001-.001zm-3.226-5.179l.002.003zm13.335 4.604a2 2 0 0 1 0-4h.976a2 2 0 1 1 0 4zm-21.428-2a2 2 0 0 1-2 2h-.976a2 2 0 0 1 0-4h.976a2 2 0 0 1 2 2M22 10.176a2 2 0 0 0 4 0V2.5a2 2 0 1 0-4 0zm-5.809 6.262a2 2 0 0 1-2-2V6.762a2 2 0 0 1 4 0v7.676a2 2 0 0 1-2 2m13.619-4.555a2 2 0 0 0 4 0V4.207a2 2 0 1 0-4 0z"
+                            clip-rule="evenodd" />
+                    </svg><span> Transaction Log</span></button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" onclick="showSection('table-section', event)">
+                    <svg class="sidenavIcons" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                        viewBox="0 0 24 24" fill="#000000">
+                        <g fill="none">
+                            <path
+                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />
+                            <path class="table-shape" fill="#ccc"
+                                d="M2 6a2 2 0 0 1 2-2h3v4H2V6Zm0 4v4h5v-4H2Zm7 0v4h6v-4H9Zm8 0v4h5v-4h-5Zm5-2V6a2 2 0 0 0-2-2h-3v4h5Zm-7 0H9V4h6v4ZM2 16h5v4H4a2 2 0 0 1-2-2v-2Zm13 0H9v4h6v-4Zm5 4h-3v-4h5v2a2 2 0 0 1-2 2Z" />
+                        </g>
+                    </svg><span> Transaction Table</span>
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" onclick="showSection('summary-section', event)">
+                    <svg class="sidenavIcons" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                        viewBox="0 0 24 24" fill="#000000">
+                        <g class="icon" fill="none" stroke="#ccc" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2">
+                            <path stroke-miterlimit="5.759" d="M3 3v16a2 2 0 0 0 2 2h16" />
+                            <path stroke-miterlimit="5.759" d="m7 14l4-4l4 4l6-6" />
+                            <path d="M18 8h3v3" />
+                        </g>
+                    </svg><span> Summary</span>
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" onclick="showSection('settings-section', event)">
+                    <svg class="sidenavIcons" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                        viewBox="0 0 24 24" fill="#000000">
+                        <g class="icon" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+                        </g>
+                    </svg>
+                    <span> Settings</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+
+
+
+
+    <div class="container-fluid p-4">
+        <!-- Section 1:transactions -->
+
+        <section id="transaction-log" class="section">
+            <h1 class="title white-txt mb-4">Transaction Log</h1>
+
+
+            <div class="inputs transaction-container">
+
+                <div class="input-box">
+                    <label for="type" class="white-txt">Type</label>
+                    <select id="type">
+                        <option value="" disabled selected>-</option>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                    <div id="type-error" class="input-error-message"></div>
+
+                </div>
+
+                <div class="input-box">
+
+                    <label for="category" class="white-txt">Category</label>
+                    <select id="category">
+                        <option value="" disabled selected>-</option>
+                    </select>
+                    <div id="category-error" class="input-error-message"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="desc" class="white-txt">Description</label>
+                    <input type="text" id="desc" placeholder="Enter a description">
+                    <div id="desc-error" class="input-error-message"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="amount" class="white-txt">Amount</label>
+                    <input type="number" id="amount" placeholder="Enter the amount">
+                    <div id="amount-error" class="input-error-message"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="currency" class="white-txt">Currency</label>
+                    <select id="currency">
+                        <option value="EGP" selected>EGP (Egyptian Pound)</option>
+                        <option value="USD">USD (US Dollar)</option>
+                        <option value="GBP">GBP (Pound Sterling)</option>
+                        <option value="EUR">EUR (Euro)</option>
+                    </select>
+                    <div id="currency-error" class="input-error-message"></div>
+                </div>
+
+                <div class="input-box">
+                    <label for="date" class="white-txt">Date</label>
+                    <input type="date" id="date">
+                    <div id="date-error" class="input-error-message"></div>
+                </div>
+
+                <div id="success-message" class="success-message"></div>
+
+
+                <div class="buttons">
+                    <button id="add-btn" class="add" type="submit">Add</button>
+                </div>
+
+
+            </div>
+
+        </section>
+
+        <!-- Section 2:Table -->
+        <section id="table-section" class="section" style="display:none;">
+            <h1 class="white-txt ">Transaction Table</h1>
+
+            <div class="buttons filterSort">
+                <button id="filter" class="filter">Filter & Sort
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10"
+                            stroke-width="1.5"
+                            d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z" />
+                    </svg>
+                </button>
+            </div>
+
+
+
+
+            <!-- Filter&Sort SideNav -->
+            <div id="filter-sidenav" class="filter-sidenav">
+
+                <div class="filter-title">
+                    <h2>Filter & Sort</h2>
+                    <button class="clear-all" id="clearAll">Clear all</button>
+                    <button id="close-filter" class="close-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024">
+                            <path fill="#253237"
+                                d="m462 512l286 401q21 28 21 47q0 27-19 45.5t-45 18.5q-7 0-13.5-1t-11.5-3.5t-8.5-4.5t-8-6t-5.5-5.5t-5-6.5l-4-5l-265-370l-264 370l-4 5l-5 6.5l-5.5 5.5l-8 6l-9 4.5L77 1023l-13 1q-26 0-45-18.5T0 960q0-19 21-47l286-401L16 105q-1-1-4-5.5T7.5 93T4 86.5t-2.5-10T1 64q0-26 18.5-45T65 0q38 0 56 34l263 369L648 34q18-34 56-34q27 0 45.5 19T768 64q0 7-.5 12.5t-2.5 10t-3.5 6.5t-4.5 6.5t-4 5.5z" />
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="filter-cont">
+                    <div class="filter-group" id="type-group">
+                        <div class="filter-header" onclick="toggleFilter(this)">
+                            <span>Type</span>
+                            <span class="arrow">&#9662;</span>
+                        </div>
+                        <div class="filter-options">
+                            <label><input type="checkbox" value="income"> Income</label>
+                            <label><input type="checkbox" value="expense"> Expense</label>
+                        </div>
+                    </div>
+
+
+                    <div class="filter-group" id="category-group">
+                        <div class="filter-header" onclick="toggleFilter(this)">
+                            <span>Category</span>
+                            <span class="arrow">&#9662;</span>
+                        </div>
+                        <div class="filter-options">
+
+                        </div>
+                    </div>
+
+                    <div class="filter-group" id="date-group">
+                        <div class="filter-header" onclick="toggleFilter(this)">
+                            <span>Date Range</span>
+                            <span class="arrow">&#9662;</span>
+                        </div>
+                        <div class="filter-options">
+                            <label>From: </label>
+                            <input type="date" id="from-date">
+                            <label class="mt-3">To: </label>
+                            <input type="date" id="to-date">
+                            <h5 id="date-range-error" class="date-error-message"></h5>
+                        </div>
+                    </div>
+
+                    <div class="filter-group" id="sort-by">
+                        <div class="filter-header" onclick="toggleFilter(this)">
+                            <span>Sort By</span>
+                            <span class="arrow">&#9662;</span>
+                        </div>
+                        <div class="filter-options">
+                            <label class="radio-option">
+                                <input type="radio" name="sort" value="date">
+                                <span class="radio-custom"></span>
+                                Date
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort" value="type">
+                                <span class="radio-custom"></span>
+                                Type
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="sort" value="amount">
+                                <span class="radio-custom"></span>
+                                Amount
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="filter-group" id="sort-direction">
+                        <div class="filter-header" onclick="toggleFilter(this)">
+                            <span>Sort Direction</span>
+                            <span class="arrow">&#9662;</span>
+                        </div>
+                        <div class="filter-options">
+                            <label class="radio-option">
+                                <input type="radio" name="direction" value="asc" checked>
+                                <span class="radio-custom"></span>
+                                Ascending
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="direction" value="desc">
+                                <span class="radio-custom"></span>
+                                Descending
+                            </label>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="apply">
+                    <button id="apply-btn" class="apply-btn">Apply</button>
+
+                </div>
+            </div>
+
+            <!-- Overlay -->
+            <div id="overlay" class="overlay"></div>
+
+
+
+
+
+            <div class="table-container mb-4">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Original Amount</th>
+                            <th scope="col">Amount in EGP</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4">Total Income: <span id="total-income">$0.00</span></th>
+                            <th colspan="2">Total Expenses: <span id="total-expenses">$0.00</span></th>
+                            <th colspan="2">Current Balance: <span id="current-balance">$0.00</span></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+
+        </section>
+
+        <!-- Section 3:summary -->
+        <section id="summary-section" class="section" style="display:none;">
+            <h1 class="white-txt mb-4">Summary Dashboard</h1>
+
+
+
+            <!-- filter -->
+            <div class="summary-buttons">
+
+                <button id="filter-month" class="filterMonth">Filter
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10"
+                            stroke-width="1.5"
+                            d="M21.25 12H8.895m-4.361 0H2.75m18.5 6.607h-5.748m-4.361 0H2.75m18.5-13.214h-3.105m-4.361 0H2.75m13.214 2.18a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm-9.25 6.607a2.18 2.18 0 1 0 0-4.36a2.18 2.18 0 0 0 0 4.36Zm6.607 6.608a2.18 2.18 0 1 0 0-4.361a2.18 2.18 0 0 0 0 4.36Z" />
+                    </svg>
+                </button>
+
+
+
+
+                <button id="export-csv" class="export-btn csv-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#000000">
+                        <g fill="none" stroke="#00b4d8" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5" color="currentColor">
+                            <path
+                                d="M3.5 13v-.804c0-2.967 0-4.45.469-5.636c.754-1.905 2.348-3.407 4.37-4.118C9.595 2 11.168 2 14.318 2c1.798 0 2.698 0 3.416.253c1.155.406 2.066 1.264 2.497 2.353c.268.677.268 1.525.268 3.22V13" />
+                            <path
+                                d="M3.5 12a3.333 3.333 0 0 1 3.333-3.333c.666 0 1.451.116 2.098-.057a1.67 1.67 0 0 0 1.179-1.18c.173-.647.057-1.432.057-2.098A3.333 3.333 0 0 1 13.5 2m-6 15.22C7.445 16.03 6.622 16 5.505 16c-1.72 0-2.005.406-2.005 2v2c0 1.594.285 2 2.005 2c1.117 0 1.94-.03 1.995-1.22m13-4.78l-1.777 4.695c-.33.87-.494 1.305-.755 1.305c-.26 0-.426-.435-.755-1.305L15.436 16m-2.56 0h-1.18c-.473 0-.709 0-.895.076c-.634.26-.625.869-.625 1.424s-.009 1.165.625 1.424c.186.076.422.076.894.076s.708 0 .894.076c.634.26.625.869.625 1.424s.009 1.165-.625 1.424c-.186.076-.422.076-.894.076H10.41" />
+                        </g>
+                    </svg>
+                    Export CSV
+                </button>
+
+                <button id="export-pdf" class="export-btn pdf-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <g fill="none">
+                            <path stroke="#253237" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M7.792 21.25h8.416a3.5 3.5 0 0 0 3.5-3.5v-5.53a3.5 3.5 0 0 0-1.024-2.475l-5.969-5.97A3.5 3.5 0 0 0 10.24 2.75H7.792a3.5 3.5 0 0 0-3.5 3.5v11.5a3.5 3.5 0 0 0 3.5 3.5" />
+                            <path fill="#000000" fill-rule="evenodd"
+                                d="M10.437 7.141c-.239.078-.392.236-.436.411c-.09.352 0 .73.253 1.203c.126.234.28.471.45.725l.092.137l.145.215l.019-.068l.086-.306q.148-.503.23-1.02c.089-.642-.011-1.018-.309-1.26c-.08-.065-.278-.119-.53-.037m.055 4.152l-.27-.362l-.032-.048c-.115-.19-.243-.38-.382-.585l-.1-.149a10 10 0 0 1-.512-.828c-.31-.578-.558-1.286-.358-2.067c.17-.664.698-1.081 1.227-1.254c.517-.168 1.174-.147 1.66.247c.792.644.848 1.573.739 2.357a9 9 0 0 1-.261 1.174l-.096.34q-.112.382-.208.769l-.067.194l1.392 1.864c.65-.078 1.364-.125 2.03-.077c.769.054 1.595.242 2.158.776a1.56 1.56 0 0 1 .395 1.441c-.117.48-.454.88-.919 1.123c-.985.515-1.902.105-2.583-.416c-.533-.407-1.045-.975-1.476-1.453l-.104-.114c-.37.057-.72.121-1.004.175c-.305.057-.684.128-1.096.22l-.151.443q-.125.288-.238.58l-.122.303a8 8 0 0 1-.427.91c-.33.578-.857 1.192-1.741 1.241c-1.184.066-1.986-.985-1.756-2.108l.006-.027c.2-.791.894-1.31 1.565-1.653c.597-.306 1.294-.532 1.941-.701zm.87 1.165l-.287.843l.421-.08l.004-.001l.38-.07zm2.84 1.604c.274.29.547.56.831.777c.55.42.94.493 1.299.305c.2-.105.284-.241.309-.342a.35.35 0 0 0-.08-.309c-.257-.228-.722-.38-1.392-.428a8 8 0 0 0-.967-.003m-5.005.947c-.318.109-.62.23-.89.368c-.587.3-.87.604-.944.867c-.078.415.192.673.516.655c.27-.015.506-.184.766-.639q.204-.372.358-.767l.107-.266z"
+                                clip-rule="evenodd" />
+                        </g>
+                    </svg>
+                    Export PDF
+                </button>
+
+            </div>
+
+
+
+
+            <!-- Filter month SideNav -->
+            <div id="filter-month-sidenav" class="filter-sidenav">
+
+                <div class="filter-title">
+                    <h2>Filter</h2>
+                    <button class="clear-all" id="clearAll">Clear all</button>
+                    <button id="close-filter-Month" class="close-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024">
+                            <path fill="#253237"
+                                d="m462 512l286 401q21 28 21 47q0 27-19 45.5t-45 18.5q-7 0-13.5-1t-11.5-3.5t-8.5-4.5t-8-6t-5.5-5.5t-5-6.5l-4-5l-265-370l-264 370l-4 5l-5 6.5l-5.5 5.5l-8 6l-9 4.5L77 1023l-13 1q-26 0-45-18.5T0 960q0-19 21-47l286-401L16 105q-1-1-4-5.5T7.5 93T4 86.5t-2.5-10T1 64q0-26 18.5-45T65 0q38 0 56 34l263 369L648 34q18-34 56-34q27 0 45.5 19T768 64q0 7-.5 12.5t-2.5 10t-3.5 6.5t-4.5 6.5t-4 5.5z" />
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="filter-cont">
+
+                    <div class="filter-group" id="year-selection">
+                        <div class="filter-header">
+                            <span>Select Year</span>
+                        </div>
+                        <div class="year-selector">
+                            <button class="year-arrow" id="year-decrease">▼</button>
+
+                            <span class="year-display" id="current-year">2025</span>
+
+                            <button class="year-arrow" id="year-increase">▲</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group" id="month-selection">
+                        <div class="filter-header">
+                            <span>Select Months</span>
+                            <!-- <span class="arrow">&#9662;</span> -->
+                        </div>
+                        <div class="month-buttons-grid">
+                            <button class="month-btn" data-month="1">January</button>
+                            <button class="month-btn" data-month="2">February</button>
+                            <button class="month-btn" data-month="3">March</button>
+
+                            <button class="month-btn" data-month="4">April</button>
+                            <button class="month-btn" data-month="5">May</button>
+                            <button class="month-btn" data-month="6">June</button>
+
+                            <button class="month-btn" data-month="7">July</button>
+                            <button class="month-btn" data-month="8">August</button>
+                            <button class="month-btn" data-month="9">September</button>
+
+                            <button class="month-btn" data-month="10">October</button>
+                            <button class="month-btn" data-month="11">November</button>
+                            <button class="month-btn" data-month="12">December</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="apply">
+                    <button id="apply-btn-month" class="apply-btn">Apply</button>
+
+                </div>
+            </div>
+
+            <!-- Overlay -->
+            <div id="overlay-sum" class="overlay"></div>
+
+
+
+
+
+
+            <div class="row">
+                <!-- left column:overview cards -->
+                <div class="col-md-6">
+                    <div class="overview-cards row row-cols-1 g-4">
+
+                        <div class="col">
+                            <div class="card green-bckgrnd h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Income</h5>
+                                    <h2 id="income">0.00 EGP</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card red-bckgrnd h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Expense</h5>
+                                    <h2 id="expense">0.00 EGP</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card blue-bckgrnd h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Remaining Balance</h5>
+                                    <h2 id="balance">0.00 EGP</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- right column:budget progress -->
+                <div class="col-md-6">
+                    <div class="budget-card h-100">
+
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Budget Progress</h5>
+                            <div class="progress-circle-container">
+                                <div class="progress-circle" id="budget-progress-circle">
+                                    <div class="progress-circle-fill"></div>
+                                    <div class="progress-circle-text">
+                                        <span id="budget-percentage">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 id="budget-spent">0/0 EGP</h4>
+
+                            <p id="budget-status" class="budget-status text-center">Set budget in Settings</p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            <!-- charts -->
+            <div class="row mt-5">
+                <div class="col-12 mb-4">
+                    <div class="chart-card">
+                        <h5 class="white-txt text-center mb-3">Monthly Trend</h5>
+                        <div class="chart-container">
+                            <canvas id="monthlyTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <h5 class="white-txt text-center mb-3">Expense Breakdown</h5>
+                        <div class="chart-container">
+                            <canvas id="expensePieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <h5 class="white-txt text-center mb-3">Income Sources</h5>
+                        <div class="chart-container">
+                            <canvas id="incomePieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- KPIs-->
+            <div class="kpi-section mt-4">
+                <h4 class="white-txt text-center mb-3">Key Performance Indicators</h4>
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"
+                                fill="#000000">
+                                <g fill="none" stroke="#00b4d8" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" color="currentColor">
+                                    <path
+                                        d="M7 18v-2m5 2v-3m5 3v-5M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12" />
+                                    <path
+                                        d="M5.992 11.486c2.155.072 7.042-.253 9.822-4.665m-1.822-.533l1.876-.302c.228-.029.564.152.647.367l.495 1.638" />
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div class="kpi-content">
+                            <div class="kpi-label">Largest Expense</div>
+                            <div class="kpi-value" id="largest-expense">-</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"
+                                fill="#000000">
+                                <g fill="none" stroke="#00b4d8" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" color="currentColor">
+                                    <path
+                                        d="M17 18v-2m-5 2v-3m-5 3v-5M6 7c3.197 3.268 7.234 4.081 11.141 2.992m-1.453-1.52l2.074 1.016c.246.121.312.4.148.624L16.527 12" />
+                                    <path
+                                        d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Smallest Expense</div>
+                            <div class="kpi-value" id="smallest-expense">-</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"
+                                fill="#000000">
+                                <g fill="none" stroke="#00b4d8" stroke-width="1.5">
+                                    <path
+                                        d="M2 14c0-3.771 0-5.657 1.172-6.828C4.343 6 6.229 6 10 6h4c3.771 0 5.657 0 6.828 1.172C22 8.343 22 10.229 22 14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14Zm14-8c0-1.886 0-2.828-.586-3.414C14.828 2 13.886 2 12 2c-1.886 0-2.828 0-3.414.586C8 3.172 8 4.114 8 6" />
+                                    <path stroke-linecap="round"
+                                        d="M12 17.333c1.105 0 2-.746 2-1.666c0-.92-.895-1.667-2-1.667s-2-.746-2-1.667c0-.92.895-1.666 2-1.666m0 6.666c-1.105 0-2-.746-2-1.666m2 1.666V18m0-8v.667m0 0c1.105 0 2 .746 2 1.666" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Top Income Source</div>
+                            <div class="kpi-value" id="top-income">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Section 4: Settings -->
+        <section id="settings-section" class="section" style="display:none;">
+            <h1 class="white-txt mb-4">Settings</h1>
+
+            <div class="settings-container">
+                <div class="settings-card">
+                    <h3 class="white-txt mb-3">Monthly Budget Settings</h3>
+
+                    <div class="budget-inputs">
+                        <div class="input-box">
+                            <label for="monthly-budget" class="white-txt">Monthly Budget Amount</label>
+                            <input type="number" id="monthly-budget" placeholder="Enter your monthly budget">
+                            <div id="monthly-budget-error" class="input-error-message"></div>
+                        </div>
+
+                        <div class="input-box">
+                            <label for="budget-currency" class="white-txt">Currency</label>
+                            <select id="budget-currency">
+                                <option value="EGP" selected>EGP (Egyptian Pound)</option>
+                                <option value="USD">USD (US Dollar)</option>
+                                <option value="GBP">GBP (Pound Sterling)</option>
+                                <option value="EUR">EUR (Euro)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="success-settings">
+                        <div id="budget-success-message" class="success-message"></div>
+                    </div>
+
+                    <div class="buttons">
+                        <button id="save-budget" class="add">Save Budget</button>
+                        <button id="clear-budget" class="clear-budget">Clear Budget</button>
+                    </div>
+
+                    <div class="budget-info white-txt mt-3">
+                        <p>Set a monthly spending limit to receive alerts when you're approaching or exceeding your
+                            budget.</p>
+                        <p id="current-budget-display" class="mt-2"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+
+    <div id="Alert" class="alert">
+        <div class="alert-box">
+            <p id="Message">Please enter valid details!</p>
+            <div class="alert-buttons">
+                <button id="Ok" class="ok">OK</button>
+                <button id="No" class="no-btn" style="display: none;">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-message"></div>
+
+
+    <script src="./js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
